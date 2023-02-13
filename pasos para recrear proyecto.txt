@@ -1,0 +1,22 @@
+*En maquina host instalar docker, docker compose y correr los scripts.
+*Crear maquina remota en aws (igual con docker y docker compose) //deploy machine
+*instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica).
+*pasar llave privada de maquina host a /opt/prod con nombre prod //Cambiar ownwership de la llave privada a 1000:1000
+
+*En host remota crear una carpeta ejecutar comandos:
+prod-user@ip-172-31-14-184:~$ mkdir maven
+prod-user@ip-172-31-14-184:~$ cd maven/
+prod-user@ip-172-31-14-184:~/maven$ vi docker-compose.yml
+
+version: '3'
+services:
+  maven:
+    image: "zabdielv/$IMAGE:$TAG"
+    container_name: maven-app
+
+
+
+En el remote machine, en la carpeta /maven crear un archivo ???????
+
+Nota:
+Actualizar ip publica de host remoto en archivos
