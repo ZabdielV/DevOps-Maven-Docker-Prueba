@@ -16,7 +16,18 @@ services:
 
 
 
-En el remote machine, en la carpeta /maven crear un archivo ???????
+*En jenkins definir una credencia para $PASS
+
+*copiar llave priva del host al docker de jenkins:
+docker cp /opt/prod jenkins:/opt/prod
+
+*Dentro del docker jenkins, ejecutar el comando
+  ssh -i /opt/prod prod-user@18.208.206.247 solo una vez.
+
+
+*Cambiar el ownwership del archivo docker.sock para que docker pueda crear otras imagenes 
+con permisos. sudo chown 1000 /var/run/docker.sock
 
 Nota:
 Actualizar ip publica de host remoto en archivos
+Tal vez es necesario cambier el ownwership de todos los archivos a 1000 en vez de root y darle chmod 755
