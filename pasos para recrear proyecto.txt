@@ -1,7 +1,14 @@
 *En maquina host instalar docker, docker compose y correr los scripts.
 *Crear maquina remota en aws (igual con docker y docker compose) //deploy machine
-*instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica).
+*instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica de la maquina host).
+      en maquina remota cambiar a usario prod-user, crear carpeta /home/prod-user/.ssh, cambiar permisos con chmod 700 .ssh/  , en archivo .ssh/authorized_keys pegar llave publica.
+      ejecutar chmod 400 .ssh/authorized_keys
+
+
+//En la maquina host se intentara logear a la remota usando la llave privada del host.
+//Cambiar permisos de llave privada con : chmod 400 prod    
 *pasar llave privada de maquina host a /opt/prod con nombre prod //Cambiar ownwership de la llave privada a 1000:1000
+
 
 *En host remota crear una carpeta ejecutar comandos:
 prod-user@ip-172-31-14-184:~$ mkdir maven
@@ -16,9 +23,9 @@ services:
 
 
 
-*En jenkins definir una credencia para $PASS
+*En jenkins definir una credencia para $PASS (es la password de docker hub que se usa para subir imagenes)
 
-*copiar llave priva del host al docker de jenkins:
+*copiar llave priva del host al docker de jenkins (esto para que jenkins pueda hacer ssh a maquia remota):
 docker cp /opt/prod jenkins:/opt/prod
 
 *Dentro del docker jenkins, ejecutar el comando
@@ -26,7 +33,7 @@ docker cp /opt/prod jenkins:/opt/prod
 
 
 *Cambiar el ownwership del archivo docker.sock para que docker pueda crear otras imagenes 
-con permisos. sudo chown 1000 /var/run/docker.sock
+con permisos (este dentro de vagrant). sudo chown 1000:1000 /var/run/docker.sock
 
 Nota:
 Actualizar ip publica de host remoto en archivos
