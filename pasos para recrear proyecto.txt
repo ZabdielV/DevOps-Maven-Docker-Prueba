@@ -1,4 +1,5 @@
 *En maquina host instalar docker, docker compose y correr los scripts.
+  *Estos scrits crear un contenedor de jenkins, cuando se configura el pileline, se obtiene la ultima modificacion del codigo remoto.
 *Crear maquina remota en aws (igual con docker y docker compose) //deploy machine
 *instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica de la maquina host).
       en maquina remota cambiar a usario prod-user, crear carpeta /home/prod-user/.ssh, cambiar permisos con chmod 700 .ssh/  , en archivo .ssh/authorized_keys pegar llave publica.

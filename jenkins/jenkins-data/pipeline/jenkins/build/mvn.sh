@@ -2,6 +2,8 @@
 
 echo "***************************"
 echo "** Building jar ***********"
+echo "** Running commands inside docker image, not vagrant ***********"
+echo "** When running this commands, jenkins already pull the last git code from remote ***********"
 echo "***************************"
 
 WORKSPACE=/home/jenkins/jenkins-data/jenkins_home/workspace/pipeline-docker-maven
