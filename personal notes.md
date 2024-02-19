@@ -1,0 +1,65 @@
+### Run proyect (personal notes)
+
+1. In host machine install docker, docker compose
+
+2. Run git clone command in host machine (vagrant/aws), run it from /home/ directory
+
+```sh
+   cd /home/ &&
+   git clone https://github.com/ZabdielV/Jenkins-Pipeline-Docker-Project.git
+```
+
+3. Once cloned, create jenkins_home at the same level that jenkins-data. Change a file ownership
+
+```sh
+   cd /home/Jenkins-Pipeline-Docker-Project/jenkins/jenkins-data/ &&
+   mkdir jenkins_home && sudo chown 1000:1000 /var/run/docker.sock
+
+```
+
+4. Run docker compose up
+
+```sh
+   docker compose up
+```
+
+The pipeline should be executed every time the code changes in /deploy branch.
+
+\*Crear maquina remota en aws (igual con docker y docker compose) //deploy machine
+\*instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica de la maquina host).
+en maquina remota cambiar a usario prod-user, crear carpeta /home/prod-user/.ssh, cambiar permisos con chmod 700 .ssh/ , en archivo .ssh/authorized_keys pegar llave publica.
+ejecutar chmod 400 .ssh/authorized_keys
+
+//En la maquina host se intentara logear a la remota usando la llave privada del host.
+//Cambiar permisos de llave privada con : chmod 400 prod
+\*pasar llave privada de maquina host a /opt/prod con nombre prod //Cambiar ownwership de la llave privada a 1000:1000
+
+\*En host remota crear una carpeta ejecutar comandos:
+prod-user@ip-172-31-14-184:~$ mkdir maven
+prod-user@ip-172-31-14-184:~$ cd maven/
+prod-user@ip-172-31-14-184:~/maven$ vi docker-compose.yml
+
+version: '3'
+services:
+maven:
+image: "zabdielv/$IMAGE:$TAG"
+container_name: maven-app
+
+\*En jenkins definir una credencia para $PASS (es la password de docker hub que se usa para subir imagenes)
+
+\*copiar llave priva del host al docker de jenkins (esto para que jenkins pueda hacer ssh a maquia remota):
+docker cp /opt/prod jenkins:/opt/prod
+
+\*Dentro del docker jenkins, ejecutar el comando
+ssh -i /opt/prod prod-user@18.208.206.247 solo una vez.
+
+\*Cambiar el ownwership del archivo docker.sock para que docker pueda crear otras imagenes
+con permisos (este dentro de vagrant). sudo chown 1000:1000 /var/run/docker.sock
+
+Nota:
+Actualizar ip publica de host remoto en archivos
+Tal vez es necesario cambier el ownwership de todos los archivos a 1000 en vez de root y darle chmod 755
+
+```
+
+```
