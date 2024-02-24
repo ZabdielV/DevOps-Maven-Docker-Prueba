@@ -1,5 +1,7 @@
 ### Run proyect (personal notes)
 
+Jenkinsfile is the root where all files are executed (for reference location).
+
 1. In host machine install docker, docker compose
 
 2. Run git clone command in host machine (vagrant/aws), run it from /home/ directory
@@ -25,41 +27,48 @@
 
 The pipeline should be executed every time the code changes in /deploy branch.
 
-\*Crear maquina remota en aws (igual con docker y docker compose) //deploy machine
-\*instalas ssh en ambas maquinas junto con los permisos (crear usuario en maquina remota prod-user y copiar llave publica de la maquina host).
-en maquina remota cambiar a usario prod-user, crear carpeta /home/prod-user/.ssh, cambiar permisos con chmod 700 .ssh/ , en archivo .ssh/authorized_keys pegar llave publica.
-ejecutar chmod 400 .ssh/authorized_keys
+- Create remote machine in aws (with docker and docker compose) //deploy machine
+- Install ssh in both machines with all access (create new linux user in remote machine called **"prod-user"** and copy public key of local machine to remote machine).
 
-//En la maquina host se intentara logear a la remota usando la llave privada del host.
-//Cambiar permisos de llave privada con : chmod 400 prod
-\*pasar llave privada de maquina host a /opt/prod con nombre prod //Cambiar ownwership de la llave privada a 1000:1000
+  - In remote machine switch to prod-user, create folder **/home/prod-user/.ssh**, change execution with chmod 700 .ssh/
+  - In folder .ssh/authorized_keys paste public key from local machine.
+  - execute chmod 400 .ssh/authorized_keys
 
-\*En host remota crear una carpeta ejecutar comandos:
-prod-user@ip-172-31-14-184:~$ mkdir maven
-prod-user@ip-172-31-14-184:~$ cd maven/
-prod-user@ip-172-31-14-184:~/maven$ vi docker-compose.yml
+- Local machine will try to log in remote machine using private key (host).
 
+  - Copy private key of host machine to `/opt/prod` with `prod` name
+    - Change private key ownership to 1000:1000
+  - Change private key execution with :`chmod 400 prod`
+
+- In remote machine execute the following commands (/home/):
+  - prod-user@ip-172-31-14-184:~$ mkdir maven
+  - prod-user@ip-172-31-14-184:~$ cd maven/
+  - prod-user@ip-172-31-14-184:~/maven$ vi docker-compose.yml
+
+## docker-compose.yml
+
+```
 version: '3'
 services:
 maven:
 image: "zabdielv/$IMAGE:$TAG"
 container_name: maven-app
-
-\*En jenkins definir una credencia para $PASS (es la password de docker hub que se usa para subir imagenes)
-
-\*copiar llave priva del host al docker de jenkins (esto para que jenkins pueda hacer ssh a maquia remota):
-docker cp /opt/prod jenkins:/opt/prod
-
-\*Dentro del docker jenkins, ejecutar el comando
-ssh -i /opt/prod prod-user@18.208.206.247 solo una vez.
-
-\*Cambiar el ownwership del archivo docker.sock para que docker pueda crear otras imagenes
-con permisos (este dentro de vagrant). sudo chown 1000:1000 /var/run/docker.sock
-
-Nota:
-Actualizar ip publica de host remoto en archivos
-Tal vez es necesario cambier el ownwership de todos los archivos a 1000 en vez de root y darle chmod 755
-
 ```
 
-```
+- In Jenkins create new credential $PASS (password for docker hub used to upload images to repository)
+
+- Copy private key of host machine to jenkins docker (so jenkins pipeline can ssh to remote machine):
+  `docker cp /opt/prod jenkins:/opt/prod`
+
+- Enter to jenkins docker and execute following command
+  `ssh -i /opt/prod prod-user@$REMOTE_HOST` once.
+
+- Update remote machine ip in Jenkinsfile.
+
+  - Gloval env $REMOTE_HOST
+
+- Make sure all files ownership are 1000:1000 (jenkins) and execution permision are chmod 755
+
+## Deployments
+
+- Commands in remote machine (AWS EC2) are executed with ssh. It can be done with AWS CLI or equivalent CLI.
