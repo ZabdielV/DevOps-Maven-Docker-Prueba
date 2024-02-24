@@ -2,6 +2,8 @@
 
 Jenkinsfile is the root where all files are executed (for reference location).
 
+Pipeline name in jenkins should be: **pipeline-docker-maven**
+
 1. In host machine install docker, docker compose
 
 2. Run git clone command in host machine (vagrant/aws), run it from /home/ directory
@@ -68,6 +70,8 @@ container_name: maven-app
   - Gloval env $REMOTE_HOST
 
 - Make sure all files ownership are 1000:1000 (jenkins) and execution permision are chmod 755
+
+- Pull from `deploy` branch in pipeline config
 
 ## Deployments
 
