@@ -52,9 +52,9 @@ The pipeline should be executed every time the code changes in /deploy branch.
 ```
 version: '3'
 services:
-maven:
-image: "zabdielv/$IMAGE:$TAG"
-container_name: maven-app
+  maven:
+    image: "zabdielv/$IMAGE:$TAG"
+    container_name: maven-app
 ```
 
 - In Jenkins create new credential $PASS (password for docker hub used to upload images to repository)
