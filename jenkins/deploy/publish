@@ -5,4 +5,7 @@ export TAG=$(sed -n '2p' /tmp/.auth)
 export PASS=$(sed -n '3p' /tmp/.auth)
 
 echo $PASS | docker login --username zabdielv --password-stdin
+if [ $RESULT -eq 1 ]; then
+    echo "Log in was successful"
+fi
 cd ~/maven && docker compose up -d
