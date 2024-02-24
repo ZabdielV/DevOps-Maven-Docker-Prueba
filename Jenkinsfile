@@ -3,7 +3,8 @@ pipeline {
     agent any
     
     environment {
-        PASS = credentials('registry-pass') 
+        PASS = credentials('registry-pass')
+        REMOTE_HOST = '18.208.163.195'
     }
 
     stages {
